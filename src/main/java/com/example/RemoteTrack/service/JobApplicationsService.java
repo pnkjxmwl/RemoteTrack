@@ -85,7 +85,7 @@ public class JobApplicationsService {
         application.setStatus(requestDto.getStatus());
         application.setJob_link(requestDto.getJob_link());
 
-        JobApplications savedEntity= jobApplicationsRepo.save(application);
+        JobApplications savedEntity = jobApplicationsRepo.save(application);
 
         JobApplicationsResponseDto responseDto = new JobApplicationsResponseDto();
         responseDto.setId(savedEntity.getId());
@@ -99,7 +99,14 @@ public class JobApplicationsService {
         responseDto.setCreated_at(savedEntity.getCreated_at());
         responseDto.setUpdated_at(savedEntity.getUpdated_at());
 
-        return  responseDto;
+        return responseDto;
     }
+
+    public void deleteApplication(UUID id) {
+        JobApplications application = jobApplicationsRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
+        jobApplicationsRepo.delete(application);
+    }
+
 
 }

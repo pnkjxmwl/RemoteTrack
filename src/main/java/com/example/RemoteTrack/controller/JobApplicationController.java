@@ -45,4 +45,13 @@ public class JobApplicationController {
         JobApplicationsResponseDto responseDto= jobApplicationsService.updateApplication(id,requestDto);
         return  ResponseEntity.status(200).body(responseDto);
     }
+
+    @DeleteMapping("/job/{id}")
+    public ResponseEntity<Void> deleteApplication(
+        @PathVariable UUID id
+    ){
+        jobApplicationsService.deleteApplication(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
