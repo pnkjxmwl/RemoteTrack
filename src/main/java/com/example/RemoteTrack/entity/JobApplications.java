@@ -1,10 +1,7 @@
 package com.example.RemoteTrack.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,17 +11,21 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@Table(name = "job_applications")
 public class JobApplications {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    @Column(columnDefinition = "text")
     private String company;
+    @Column(columnDefinition = "text")
     private String position;
     private String location;
     private String status;
     private String job_link;
     private String notes;
+    @Temporal(TemporalType.DATE)
     private LocalDate applied_on;
 
     @CreationTimestamp

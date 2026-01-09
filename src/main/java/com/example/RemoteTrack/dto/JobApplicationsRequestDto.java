@@ -1,8 +1,7 @@
 package com.example.RemoteTrack.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Date;
 
 public class JobApplicationsRequestDto {
 

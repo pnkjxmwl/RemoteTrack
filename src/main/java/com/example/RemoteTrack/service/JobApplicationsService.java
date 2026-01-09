@@ -9,7 +9,10 @@ import com.example.RemoteTrack.repository.JobApplicationsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -100,6 +103,32 @@ public class JobApplicationsService {
         responseDto.setUpdated_at(savedEntity.getUpdated_at());
 
         return responseDto;
+    }
+
+    public List<JobApplicationsResponseDto> findApplications(
+        String search,
+        String status,
+        LocalDate fromDate,
+        LocalDate toDate
+    ){
+        System.out.println(fromDate);
+        List<JobApplications> jobs = jobApplicationsRepo.searchJobs(status,search,fromDate,toDate);
+        List<JobApplicationsResponseDto> jobsResposneList = new ArrayList<>();
+        for(JobApplications job:jobs){
+            JobApplicationsResponseDto jobdto= new JobApplicationsResponseDto();
+            jobdto.setId(job.getId());
+            jobdto.setCompany(job.getCompany());
+            jobdto.setPosition(job.getPosition());
+            jobdto.setLocation(job.getLocation());
+            jobdto.setStatus(job.getStatus());
+            jobdto.setJob_link(job.getJob_link());
+            jobdto.setNotes(job.getNotes());
+            jobdto.setApplied_on(job.getApplied_on());
+            jobdto.setCreated_at(job.getCreated_at());
+            jobdto.setUpdated_at(job.getUpdated_at());
+            jobsResposneList.add(jobdto);
+        }
+        return  jobsResposneList;
     }
 
     public void deleteApplication(UUID id) {
