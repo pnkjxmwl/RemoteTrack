@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class JobApplicationsService {
@@ -44,5 +46,34 @@ public class JobApplicationsService {
 
         return responseDto;
     }
+
+    public JobApplicationsResponseDto findApplicationById(UUID id) {
+
+        Optional<JobApplications> application = jobApplicationsRepo.findById(id);
+        JobApplicationsResponseDto responseDto = new JobApplicationsResponseDto();
+
+        try {
+            responseDto.setId(application.get().getId());
+            responseDto.setCompany(application.get().getCompany());
+            responseDto.setPosition(application.get().getPosition());
+            responseDto.setLocation(application.get().getLocation());
+            responseDto.setStatus(application.get().getStatus());
+            responseDto.setJob_link(application.get().getJob_link());
+            responseDto.setNotes(application.get().getNotes());
+            responseDto.setApplied_on(application.get().getApplied_on());
+            responseDto.setCreated_at(application.get().getCreated_at());
+            responseDto.setUpdated_at(application.get().getUpdated_at());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return responseDto;
+    }
+
+//    public JobApplicationsResponseDto updateApplication(UUID id,JobApplicationsRequestDto requestDto){
+//
+//    }
 
 }
