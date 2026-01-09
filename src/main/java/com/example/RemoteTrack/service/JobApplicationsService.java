@@ -4,6 +4,7 @@ package com.example.RemoteTrack.service;
 import com.example.RemoteTrack.dto.JobApplicationsRequestDto;
 import com.example.RemoteTrack.dto.JobApplicationsResponseDto;
 import com.example.RemoteTrack.entity.JobApplications;
+import com.example.RemoteTrack.exception.ResourceNotFoundException;
 import com.example.RemoteTrack.repository.JobApplicationsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,8 +73,33 @@ public class JobApplicationsService {
         return responseDto;
     }
 
-//    public JobApplicationsResponseDto updateApplication(UUID id,JobApplicationsRequestDto requestDto){
-//
-//    }
+    public JobApplicationsResponseDto updateApplication(UUID id, JobApplicationsRequestDto requestDto) {
+        JobApplications application = jobApplicationsRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
+
+        application.setCompany(requestDto.getCompany());
+        application.setPosition(requestDto.getPosition());
+        application.setLocation(requestDto.getLocation());
+        application.setNotes(requestDto.getNotes());
+        application.setApplied_on(requestDto.getApplied_on());
+        application.setStatus(requestDto.getStatus());
+        application.setJob_link(requestDto.getJob_link());
+
+        JobApplications savedEntity= jobApplicationsRepo.save(application);
+
+        JobApplicationsResponseDto responseDto = new JobApplicationsResponseDto();
+        responseDto.setId(savedEntity.getId());
+        responseDto.setCompany(savedEntity.getCompany());
+        responseDto.setPosition(savedEntity.getPosition());
+        responseDto.setLocation(savedEntity.getLocation());
+        responseDto.setStatus(savedEntity.getStatus());
+        responseDto.setJob_link(savedEntity.getJob_link());
+        responseDto.setNotes(savedEntity.getNotes());
+        responseDto.setApplied_on(savedEntity.getApplied_on());
+        responseDto.setCreated_at(savedEntity.getCreated_at());
+        responseDto.setUpdated_at(savedEntity.getUpdated_at());
+
+        return  responseDto;
+    }
 
 }
