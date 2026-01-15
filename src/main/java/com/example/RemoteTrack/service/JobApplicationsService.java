@@ -111,7 +111,7 @@ public class JobApplicationsService {
         LocalDate fromDate,
         LocalDate toDate
     ){
-        System.out.println(fromDate);
+//        System.out.println(fromDate+ " , " +toDate);
         List<JobApplications> jobs = jobApplicationsRepo.searchJobs(status,search,fromDate,toDate);
         List<JobApplicationsResponseDto> jobsResposneList = new ArrayList<>();
         for(JobApplications job:jobs){

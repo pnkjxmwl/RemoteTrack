@@ -12,7 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class JobApplicationController {
 
     @Autowired
