@@ -14,17 +14,13 @@ import java.util.Optional;
 
 public interface JobApplicationsRepo extends JpaRepository<JobApplications, UUID> {
 
-    @Query("""
-            SELECT j FROM JobApplications j
-            WHERE j.userId = ?1
-            AND (?2 IS NULL OR j.status = ?2)
-            AND (
-                ?3 IS NULL OR
-                j.company LIKE (CONCAT(CAST(?3 AS text), '%')) OR
-                j.position LIKE (CONCAT(CAST(?3 AS text),'%'))
-            )
-            AND (?4 IS NULL OR j.appliedOn >= ?4)
-            AND (?5 IS NULL OR j.appliedOn <= ?5)
+        @Query("""
+                SELECT j FROM JobApplications j 
+                WHERE j.userId = ?1 
+                AND (?2 IS NULL OR j.status = ?2) 
+                AND (?3 IS NULL OR j.company LIKE CONCAT(?3, '%') OR j.position LIKE CONCAT(?3, '%')) 
+                AND (?4 IS NULL OR j.applied_on >= ?4) 
+                AND (?5 IS NULL OR j.applied_on <= ?5)
             """)
     List<JobApplications> searchJobs(String userId, String status, String search, LocalDate fromDate, LocalDate toDate);
     
