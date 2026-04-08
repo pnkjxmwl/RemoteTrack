@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -22,49 +25,52 @@ public class JobApplicationController {
 
     @PostMapping("/job")
     public ResponseEntity<JobApplicationsResponseDto> createJobApplication(
-            @RequestBody JobApplicationsRequestDto requestDto
-    ) {
-        JobApplicationsResponseDto responseDto = jobApplicationsService.createApplication(requestDto);
+            @RequestBody JobApplicationsRequestDto requestDto,
+            @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        JobApplicationsResponseDto responseDto = jobApplicationsService.createApplication(requestDto, userId);
         return ResponseEntity.status(201).body(responseDto);
     }
 
     @GetMapping("/job/{id}")
     public ResponseEntity<JobApplicationsResponseDto> findApplicationById(
-            @PathVariable UUID id
-    ) {
-        JobApplicationsResponseDto responseDto = null;
-        try {
-            responseDto = jobApplicationsService.findApplicationById(id);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            @PathVariable UUID id,
+            @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        JobApplicationsResponseDto responseDto = jobApplicationsService.findApplicationById(id, userId);
         return ResponseEntity.status(200).body(responseDto);
     }
 
     @PatchMapping("/job/{id}")
     public ResponseEntity<JobApplicationsResponseDto> updateApplication(
             @PathVariable UUID id,
-            @RequestBody JobApplicationsRequestDto requestDto
-    ) {
-        JobApplicationsResponseDto responseDto = jobApplicationsService.updateApplication(id, requestDto);
+            @RequestBody JobApplicationsRequestDto requestDto,
+            @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        JobApplicationsResponseDto responseDto = jobApplicationsService.updateApplication(id, requestDto, userId);
         return ResponseEntity.status(200).body(responseDto);
     }
 
     @DeleteMapping("/job/{id}")
     public ResponseEntity<Void> deleteApplication(
-            @PathVariable UUID id
-    ) {
-        jobApplicationsService.deleteApplication(id);
+            @PathVariable UUID id,
+            @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        jobApplicationsService.deleteApplication(id, userId);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/job")
     public ResponseEntity<List<JobApplicationsResponseDto>> findApplicationByFilter(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) LocalDate fromDate,
-            @RequestParam(required = false) LocalDate toDate
-    ) {
-        List<JobApplicationsResponseDto> responseDtoList = jobApplicationsService.findApplications(search, status, fromDate, toDate);
+            @RequestParam(required = false) LocalDate toDate,
+            @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        List<JobApplicationsResponseDto> responseDtoList = jobApplicationsService.findApplications(search, status,
+                fromDate, toDate, userId);
         return ResponseEntity.status(200).body(responseDtoList);
     }
+
 }

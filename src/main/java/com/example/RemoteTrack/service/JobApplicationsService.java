@@ -22,7 +22,8 @@ public class JobApplicationsService {
     private JobApplicationsRepo jobApplicationsRepo;
 
     public JobApplicationsResponseDto createApplication(
-            JobApplicationsRequestDto requestDto
+            JobApplicationsRequestDto requestDto,
+            String userId
     ) {
         JobApplications entity = new JobApplications();
         entity.setCompany(requestDto.getCompany());
@@ -32,6 +33,7 @@ public class JobApplicationsService {
         entity.setJob_link(requestDto.getJob_link());
         entity.setNotes(requestDto.getNotes());
         entity.setApplied_on(requestDto.getApplied_on());
+        entity.setUserId(userId);
 
 
         JobApplications savedEntity = jobApplicationsRepo.save(entity);
@@ -51,9 +53,9 @@ public class JobApplicationsService {
         return responseDto;
     }
 
-    public JobApplicationsResponseDto findApplicationById(UUID id) {
+    public JobApplicationsResponseDto findApplicationById(UUID id, String userId) {
 
-        Optional<JobApplications> application = jobApplicationsRepo.findById(id);
+        Optional<JobApplications> application = jobApplicationsRepo.findByIdAndUserId(id, userId);
         JobApplicationsResponseDto responseDto = new JobApplicationsResponseDto();
 
         try {
@@ -76,8 +78,8 @@ public class JobApplicationsService {
         return responseDto;
     }
 
-    public JobApplicationsResponseDto updateApplication(UUID id, JobApplicationsRequestDto requestDto) {
-        JobApplications application = jobApplicationsRepo.findById(id)
+    public JobApplicationsResponseDto updateApplication(UUID id, JobApplicationsRequestDto requestDto , String userId) {
+        JobApplications application = jobApplicationsRepo.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
 
         application.setCompany(requestDto.getCompany());
@@ -87,6 +89,7 @@ public class JobApplicationsService {
         application.setApplied_on(requestDto.getApplied_on());
         application.setStatus(requestDto.getStatus());
         application.setJob_link(requestDto.getJob_link());
+        application.setUserId(userId);
 
         JobApplications savedEntity = jobApplicationsRepo.save(application);
 
@@ -109,10 +112,11 @@ public class JobApplicationsService {
         String search,
         String status,
         LocalDate fromDate,
-        LocalDate toDate
+        LocalDate toDate,
+        String userId
     ){
 //        System.out.println(fromDate+ " , " +toDate);
-        List<JobApplications> jobs = jobApplicationsRepo.searchJobs(status,search,fromDate,toDate);
+        List<JobApplications> jobs = jobApplicationsRepo.searchJobs(userId,status,search,fromDate,toDate);
         List<JobApplicationsResponseDto> jobsResposneList = new ArrayList<>();
         for(JobApplications job:jobs){
             JobApplicationsResponseDto jobdto= new JobApplicationsResponseDto();
@@ -131,8 +135,8 @@ public class JobApplicationsService {
         return  jobsResposneList;
     }
 
-    public void deleteApplication(UUID id) {
-        JobApplications application = jobApplicationsRepo.findById(id)
+    public void deleteApplication(UUID id, String userId) {
+        JobApplications application = jobApplicationsRepo.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
         jobApplicationsRepo.delete(application);
     }
