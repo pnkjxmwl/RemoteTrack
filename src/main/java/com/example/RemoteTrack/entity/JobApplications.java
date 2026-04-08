@@ -33,7 +33,17 @@ public class JobApplications {
     @UpdateTimestamp
     private LocalDateTime updated_at;
 
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+
     public JobApplications() {
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public UUID getId() {
