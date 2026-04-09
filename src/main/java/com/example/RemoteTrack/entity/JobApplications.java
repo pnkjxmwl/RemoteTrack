@@ -33,7 +33,7 @@ public class JobApplications {
     @UpdateTimestamp
     private LocalDateTime updated_at;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private String userId;
 
     public JobApplications() {

@@ -25,6 +25,7 @@ public class JobApplicationsService {
             JobApplicationsRequestDto requestDto,
             String userId
     ) {
+        System.out.println("Creating job application for user: " + userId);
         JobApplications entity = new JobApplications();
         entity.setCompany(requestDto.getCompany());
         entity.setPosition(requestDto.getPosition());
@@ -37,7 +38,7 @@ public class JobApplicationsService {
 
 
         JobApplications savedEntity = jobApplicationsRepo.save(entity);
-
+        System.out.println("Job application created with ID: " + savedEntity.getId());
         JobApplicationsResponseDto responseDto = new JobApplicationsResponseDto();
         responseDto.setId(savedEntity.getId());
         responseDto.setCompany(savedEntity.getCompany());

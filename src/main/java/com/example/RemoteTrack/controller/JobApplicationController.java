@@ -28,6 +28,7 @@ public class JobApplicationController {
             @RequestBody JobApplicationsRequestDto requestDto,
             @AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getSubject();
+        System.out.println("Creating job application for user: " + userId);
         JobApplicationsResponseDto responseDto = jobApplicationsService.createApplication(requestDto, userId);
         return ResponseEntity.status(201).body(responseDto);
     }
